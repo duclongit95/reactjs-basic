@@ -19,17 +19,14 @@ import * as yup from "yup";
 import InputField from "../../../../components/form-control/InputField";
 import PasswordField from "../../../../components/form-control/PasswordField";
 
-RegisterForm.propTypes = {
-  onRegisterSubmit: PropTypes.func,
-  onClose: PropTypes.func,
-
+LoginForm.propTypes = {
+  onLoginSubmit: PropTypes.func,
   handleMode: PropTypes.func,
 };
 
-RegisterForm.defaultValues = {
-  onRegisterSubmit: null,
+LoginForm.defaultValues = {
+  onLoginSubmit: null,
   handleMode: null,
-  onClose: null,
 };
 
 function Copyright() {
@@ -37,7 +34,7 @@ function Copyright() {
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
       <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+        Harry Tran
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -67,7 +64,6 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     top: theme.spacing(1),
     right: theme.spacing(2),
-
     cursor: "pointer",
     color: theme.palette.grey[500],
   },
@@ -75,31 +71,18 @@ const useStyles = makeStyles((theme) => ({
 
 //schema validation by yup
 const schema = yup.object().shape({
-  fullName: yup.string().required("You need to enter your first name"),
-  email: yup
-    .string()
-    .required("You need to enter your email")
-    .email("The email address don't match"),
-  password: yup
-    .string()
-    .required("You need to enter the password")
-    .min(6, "Your password is too short"),
-  retypePassword: yup
-    .string()
-    .required("You need to enter the retype password")
-    .oneOf([yup.ref("password")], "Password does not match"),
+  identifier: yup.string().required("You need to enter your email"),
+  password: yup.string().required("You need to enter the password"),
 });
 
-export default function RegisterForm(props) {
-  let { onRegisterSubmit, onClose, handleMode } = props;
+export default function LoginForm(props) {
+  let { onLoginSubmit, onClose, handleMode } = props;
   const classes = useStyles();
 
   const form = useForm({
     defaultValues: {
-      fullName: "",
-      email: "",
+      identifier: "",
       password: "",
-      retypePassword: "",
     },
     resolver: yupResolver(schema),
   });
@@ -108,15 +91,15 @@ export default function RegisterForm(props) {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <Close className={classes.closeBtn} onClose={onClose} />
+        <Close onClick={onClose} className={classes.closeBtn} />
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign up
+          Sign In
         </Typography>
         <form
-          onSubmit={form.handleSubmit(onRegisterSubmit)}
+          onSubmit={form.handleSubmit(onLoginSubmit)}
           className={classes.form}
           noValidate
         >
@@ -124,21 +107,12 @@ export default function RegisterForm(props) {
             <Grid item xs={12}>
               <InputField
                 form={form}
-                name="fullName"
-                id="fullName"
-                label="Full Name"
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <InputField
-                form={form}
                 variant="outlined"
                 required
                 fullWidth
-                id="email"
+                id="identifier"
                 label="Email Address"
-                name="email"
+                name="identifier"
                 autoComplete="email"
               />
             </Grid>
@@ -150,20 +124,6 @@ export default function RegisterForm(props) {
                 label="Password"
               />
             </Grid>
-            <Grid item xs={12}>
-              <PasswordField
-                form={form}
-                name="retypePassword"
-                id="retypePassWord"
-                label="Retype Password"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive inspiration, marketing promotions and updates via email."
-              />
-            </Grid>
           </Grid>
           <Button
             type="submit"
@@ -172,16 +132,16 @@ export default function RegisterForm(props) {
             color="primary"
             className={classes.submit}
           >
-            Create an account
+            Sign In
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
               <Link
                 href="#"
                 variant="body2"
-                onClick={() => handleMode("login")}
+                onClick={() => handleMode("register")}
               >
-                Already have an account? Sign in
+                Don't have an account? Sign up
               </Link>
             </Grid>
           </Grid>

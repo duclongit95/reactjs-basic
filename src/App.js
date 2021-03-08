@@ -13,7 +13,6 @@ function App() {
         _limit: 10,
       };
       const productList = await productApi.getAll(params);
-      console.log(productList);
     };
 
     fetchProducts();

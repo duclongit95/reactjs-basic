@@ -1,38 +1,36 @@
+import { unwrapResult } from "@reduxjs/toolkit";
+import { loginUserApi, registerUserApi } from "features/Auth/userSlice";
+import { useSnackbar } from "notistack";
 import React from "react";
 import { useDispatch } from "react-redux";
-import RegisterForm from "../RegisterForm";
-import { registerUserApi } from "features/Auth/userSlice";
-import { unwrapResult } from "@reduxjs/toolkit";
-import { useSnackbar } from "notistack";
+import LoginForm from "../LoginForm";
 import PropTypes from "prop-types";
 
-Register.propTypes = {
+Login.propTypes = {
   onClose: PropTypes.func,
   handleMode: PropTypes.func,
 };
 
-Register.defaultProps = {
+Login.defaultProps = {
   onClose: null,
   handleMode: null,
 };
 
-function Register({ onClose, handleMode }) {
+function Login({ onClose, handleMode }) {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
-  const handleRegisterSubmit = async (newUser) => {
+  const handleLoginSubmit = async (user) => {
     try {
-      newUser.username = newUser.email;
-      const action = registerUserApi(newUser);
+      const action = loginUserApi(user);
 
       const resultAction = await dispatch(action);
       const data = unwrapResult(resultAction);
 
+      enqueueSnackbar("Register Successfully", { variant: "success" });
       if (onClose) {
         onClose();
       }
-
-      enqueueSnackbar("Register Successfully", { variant: "success" });
     } catch (error) {
       enqueueSnackbar(error.message, { variant: "error" });
     }
@@ -40,8 +38,8 @@ function Register({ onClose, handleMode }) {
 
   return (
     <React.Fragment>
-      <RegisterForm
-        onRegisterSubmit={handleRegisterSubmit}
+      <LoginForm
+        onLoginSubmit={handleLoginSubmit}
         onClose={onClose}
         handleMode={handleMode}
       />
@@ -49,4 +47,4 @@ function Register({ onClose, handleMode }) {
   );
 }
 
-export default Register;
+export default Login;
